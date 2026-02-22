@@ -12,6 +12,21 @@ class DatabaseSchema:
         schema_path = os.path.join(os.path.dirname(__file__), "schema.sql")
         with open(schema_path, "r", encoding="utf-8") as f:
             schema = f.read()
+            
+        try:
+            await pool.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS active_power TEXT DEFAULT NULL;")
+            await pool.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS last_attack TIMESTAMP;")
+            await pool.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS special_power_cooldown TIMESTAMP;")
+            
+            await pool.execute("ALTER TABLE boss ADD COLUMN IF NOT EXISTS shield_active BOOLEAN DEFAULT false;")
+            await pool.execute("ALTER TABLE boss ADD COLUMN IF NOT EXISTS rage_mode BOOLEAN DEFAULT false;")
+            await pool.execute("ALTER TABLE boss ADD COLUMN IF NOT EXISTS defense_mode TEXT DEFAULT 'Normal';")
+            await pool.execute("ALTER TABLE boss ADD COLUMN IF NOT EXISTS phase INT DEFAULT 1;")
+            await pool.execute("ALTER TABLE boss ADD COLUMN IF NOT EXISTS last_activity TIMESTAMP;")
+            await pool.execute("ALTER TABLE boss ADD COLUMN IF NOT EXISTS attacks_taken INT DEFAULT 0;")
+        except Exception as e:
+            log.warning(f"Failed to alter existing tables (expected if empty db): {e}")
+
         await pool.execute(schema)
         
         # Initialize default boss if not exists
