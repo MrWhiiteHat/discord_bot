@@ -26,7 +26,8 @@ class RPGDiscordBot(commands.Bot):
             "cogs.boss",
             "cogs.shop",
             "cogs.faction",
-            "cogs.events"
+            "cogs.events",
+            "cogs.arg"
         ]
         for cog in cogs:
             try:

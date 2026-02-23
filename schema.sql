@@ -38,3 +38,19 @@ CREATE TABLE IF NOT EXISTS shop (
     price INT,
     role_id BIGINT
 );
+
+CREATE TABLE IF NOT EXISTS arg_users (
+    user_id BIGINT PRIMARY KEY,
+    current_phase INT DEFAULT 1,
+    puzzles_solved INT DEFAULT 0,
+    is_traitor BOOLEAN DEFAULT FALSE,
+    last_submission TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS arg_puzzles (
+    puzzle_id SERIAL PRIMARY KEY,
+    phase INT,
+    answer TEXT,
+    channel_id BIGINT,
+    solved BOOLEAN DEFAULT FALSE
+);
